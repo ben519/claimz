@@ -8,5 +8,5 @@ You can install claimz from github with:
 
 ```R
 # install.packages("devtools")
-devtools::install_github("claimz/ben519")
+devtools::install_github("ben519/claimz")
 ```
