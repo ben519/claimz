@@ -1,3 +1,7 @@
+#' @title
+#' Claims At
+#'
+#' @description
 #' Get claims evaluated at a specific date or age
 
 claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policyAge=NULL, maxValuationDate=NULL, dropNAs=FALSE){

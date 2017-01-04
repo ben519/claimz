@@ -1,3 +1,7 @@
+#' @title
+#' Policies At
+#'
+#' @description
 #' Get policies evaluated at a specific date or age
 
 policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, policyAge=NULL, maxValuationDate=NULL, dropNAs=FALSE){

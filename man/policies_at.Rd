@@ -2,7 +2,7 @@
 % Please edit documentation in R/policies_at.R
 \name{policies_at}
 \alias{policies_at}
-\title{Get policies evaluated at a specific date or age}
+\title{Policies At}
 \usage{
 policies_at(policies, claims, claimvaluations, valuationDate = NULL,
   policyAge = NULL, maxValuationDate = NULL, dropNAs = FALSE)

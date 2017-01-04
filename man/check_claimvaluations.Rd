@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_claimvaluations.R
 \name{check_claimvaluations}
 \alias{check_claimvaluations}
-\title{Validate a claimvaluations dataset}
+\title{Check Claim Valuations}
 \usage{
 check_claimvaluations(claimvaluations)
 }

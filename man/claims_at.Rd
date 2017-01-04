@@ -2,7 +2,7 @@
 % Please edit documentation in R/claims_at.R
 \name{claims_at}
 \alias{claims_at}
-\title{Get claims evaluated at a specific date or age}
+\title{Claims At}
 \usage{
 claims_at(claimvaluations, valuationDate = NULL, claimAge = NULL,
   policyAge = NULL, maxValuationDate = NULL, dropNAs = FALSE)

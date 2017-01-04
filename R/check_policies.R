@@ -1,3 +1,7 @@
+#' @title
+#' Check Policies
+#'
+#' @description
 #' Validate a policies dataset
 
 check_policies <- function(policies){

@@ -1,3 +1,7 @@
+#' @title
+#' Check Claim Valuations
+#'
+#' @description
 #' Validate a claimvaluations dataset
 
 check_claimvaluations <- function(claimvaluations){

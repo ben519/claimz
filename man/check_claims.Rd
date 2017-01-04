@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_claims.R
 \name{check_claims}
 \alias{check_claims}
-\title{Validate a claims dataset}
+\title{Check Claims}
 \usage{
 check_claims(claims)
 }

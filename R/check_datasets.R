@@ -1,4 +1,8 @@
-# Validate policies, claims, and claimvaluations
+#' @title
+#' Check Datasets
+#'
+#' @description
+#' Validate policies, claims, and claimvaluations
 
 check_datasets <- function(policies, claims, claimvaluations){
   # Run tests to validate the data

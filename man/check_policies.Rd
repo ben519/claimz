@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_policies.R
 \name{check_policies}
 \alias{check_policies}
-\title{Validate a policies dataset}
+\title{Check Policies}
 \usage{
 check_policies(policies)
 }
