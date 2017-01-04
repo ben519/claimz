@@ -21,10 +21,14 @@ Demonstration
 ------
 
 ```r
+#--------------------------------------------------
+# Load packages
+
 library(claimz)
 library(data.table)
 library(lubridate)
 
+#--------------------------------------------------
 # Datasets
 
 policiez
