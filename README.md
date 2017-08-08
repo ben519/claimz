@@ -20,17 +20,15 @@ devtools::install_github("ben519/claimz")
 Demonstration
 ------
 
+#### Load packages
 ```r
-#--------------------------------------------------
-# Load packages
-
 library(claimz)
 library(data.table)
 library(lubridate)
+```
 
-#--------------------------------------------------
-# Datasets
-
+#### Datasets
+```r
 policiez
    PolicyID EffectiveDate ExpirationDate
 1:        1    2014-01-01     2015-01-01
@@ -49,16 +47,16 @@ claimvaluationz
 3:                3       1        1    2014-01-01     2015-01-01 2014-03-15    2016-01-01      125
 4:                4       2        1    2014-01-01     2015-01-01 2014-04-01    2016-01-01      230
 5:                5       3        2    2014-06-01     2015-06-01 2015-05-30    2016-01-01       75
+```
 
-#--------------------------------------------------
-# Validate the data structure and relationships
-
+#### Validate the data structure and relationships
+```r
 check_datasets(policiez, claimz, claimvaluationz)  # No warnings 
 check_datasets(policiez, head(claimz, 2), claimvaluationz)  # 1 warning: "1 unique ClaimIDs in claimvaluations not in claims"
+```
 
-#--------------------------------------------------
-# Snapshots by date/age
-
+#### Snapshots by date/age
+```r
 claims_at(claimvaluationz, valuationDate=as.Date("2015-6-30"))
    ClaimValuationID ClaimID ValuationDate CHValuationDate
 1:                1       1    2015-06-30      2015-01-01
@@ -72,5 +70,5 @@ claims_at(claimvaluationz, claimAge=12)
 3:                5       3    2016-05-30      2016-01-01 2015-05-30
 ```
 
-## Contact
+#### Contact
 If you'd like to contact me regarding bugs, questions, or general consulting, feel free to drop me a line - bgorman519@gmail.com
