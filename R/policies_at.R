@@ -1,8 +1,26 @@
 #' @title
-#' Policies At
+#' Claims At
 #'
 #' @description
-#' Get policies evaluated at a specific date or age
+#' Returns the given policies at the desired valuation points with Total Incurred
+#'
+#' @details
+#' fill me in
+#'
+#' @param policies fill me in
+#' @param claims fill me in
+#' @param claimvaluations fill me in
+#' @param valuationDate fill me in
+#' @param policyAge fill me in
+#' @param maxValuationDate fill me in
+#' @param dropNAs fill me in
+#'
+#' @importFrom lubridate %m+%
+#' @import data.table
+#'
+#' @examples
+#' library(lubridate)
+#' library(data.table)
 
 policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, policyAge=NULL, maxValuationDate=NULL, dropNAs=FALSE){
   # Returns the given policies at the desired valuation points with Total Incurred

@@ -23,5 +23,5 @@ claimvaluationz
 
 # Validate
 is_valid_claimvaluations(claimvaluationz)
-is_valid_claimvaluations(claimvaluationz[, list(ClaimId = ClaimID, ValuationDate)])
+is_valid_claimvaluations(claimvaluationz[, list(Claimid = ClaimID, ValuationDate)])
 }

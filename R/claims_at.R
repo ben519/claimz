@@ -26,12 +26,12 @@
 #' @param maxValuationDate don't return claims valued after this date
 #' @param dropImmatureValuations should claims be excluded in the result if their first valuation date is before maxValuationDate?
 #'
+#' @importFrom lubridate %m+%
 #' @import data.table
-#' @import lubridate
 #'
 #' @examples
-#' library(data.table)
 #' library(lubridate)
+#' library(data.table)
 #'
 #' # Sample claim valuations
 #' claimvaluationz

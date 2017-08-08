@@ -2,11 +2,33 @@
 % Please edit documentation in R/policies_at.R
 \name{policies_at}
 \alias{policies_at}
-\title{Policies At}
+\title{Claims At}
 \usage{
 policies_at(policies, claims, claimvaluations, valuationDate = NULL,
   policyAge = NULL, maxValuationDate = NULL, dropNAs = FALSE)
 }
+\arguments{
+\item{policies}{fill me in}
+
+\item{claims}{fill me in}
+
+\item{claimvaluations}{fill me in}
+
+\item{valuationDate}{fill me in}
+
+\item{policyAge}{fill me in}
+
+\item{maxValuationDate}{fill me in}
+
+\item{dropNAs}{fill me in}
+}
 \description{
-Get policies evaluated at a specific date or age
+Returns the given policies at the desired valuation points with Total Incurred
+}
+\details{
+fill me in
+}
+\examples{
+library(lubridate)
+library(data.table)
 }

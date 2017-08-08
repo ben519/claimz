@@ -40,8 +40,8 @@ future valuation dates.  For example, if claimvaluations has monthly valuations 
 which occured in Novemeber and December of 2016.
 }
 \examples{
-library(data.table)
 library(lubridate)
+library(data.table)
 
 # Sample claim valuations
 claimvaluationz
