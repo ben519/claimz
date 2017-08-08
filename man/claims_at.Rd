@@ -7,6 +7,15 @@
 claims_at(claimvaluations, valuationDate = NULL, claimAge = NULL,
   policyAge = NULL, maxValuationDate = NULL, dropNAs = FALSE)
 }
+\arguments{
+\item{dropNAs}{}
+}
 \description{
 Get claims evaluated at a specific date or age
+}
+\details{
+Get claims evaluated at a specific date or age
+}
+\examples{
+library(data.table)
 }

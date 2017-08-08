@@ -3,6 +3,22 @@
 #'
 #' @description
 #' Get claims evaluated at a specific date or age
+#'
+#' @details
+#' Get claims evaluated at a specific date or age
+#'
+#' @param claimvaluations
+#' @param valuationDate
+#' @param claimAge
+#' @param policyAge
+#' @param maxValuationDate
+#' @param dropNAs
+#'
+#' @export
+#' @import data.table
+#'
+#' @examples
+#' library(data.table)
 
 claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policyAge=NULL, maxValuationDate=NULL, dropNAs=FALSE){
   # Returns a set of unique claims, each mapped to a single row in claimvaluations
