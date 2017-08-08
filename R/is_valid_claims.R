@@ -9,6 +9,7 @@
 #'
 #' @param claims data.table object with columns {"ClaimID", "PolicyID", "DOL"}
 #'
+#' @export
 #' @import data.table
 #'
 #' @examples

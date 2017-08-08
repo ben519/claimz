@@ -9,6 +9,7 @@
 #'
 #' @param policies data.table object with columns {"PolicyID"}
 #'
+#' @export
 #' @import data.table
 #'
 #' @examples

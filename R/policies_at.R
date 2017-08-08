@@ -15,6 +15,7 @@
 #' @param maxValuationDate fill me in
 #' @param dropNAs fill me in
 #'
+#' @export
 #' @importFrom lubridate %m+%
 #' @import data.table
 #'

@@ -29,6 +29,7 @@
 #' @importFrom lubridate %m+%
 #' @import data.table
 #'
+#' @export
 #' @examples
 #' library(lubridate)
 #' library(data.table)

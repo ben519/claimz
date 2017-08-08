@@ -11,6 +11,7 @@
 #' @param claims data.table object with columns {"ClaimID", "PolicyID", "DOL"}
 #' @param claimvaluations data.table object with columns {"ValuationDate", "ClaimID"}
 #'
+#' @export
 #' @import data.table
 #'
 #' @examples
