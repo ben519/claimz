@@ -9,4 +9,3 @@ check_claims(claims)
 \description{
 Validate a claims dataset
 }
-

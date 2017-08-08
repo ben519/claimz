@@ -10,4 +10,3 @@ claims_at(claimvaluations, valuationDate = NULL, claimAge = NULL,
 \description{
 Get claims evaluated at a specific date or age
 }
-

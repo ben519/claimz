@@ -10,4 +10,3 @@ policies_at(policies, claims, claimvaluations, valuationDate = NULL,
 \description{
 Get policies evaluated at a specific date or age
 }
-

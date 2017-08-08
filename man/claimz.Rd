@@ -32,4 +32,3 @@ setcolorder(claimz, c("ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", 
 save(claimz, file="data/claimz.rda")
 }
 \keyword{datasets}
-

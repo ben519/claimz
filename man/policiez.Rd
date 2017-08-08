@@ -28,4 +28,3 @@ policiez <- data.table::data.table(
 save(policiez, file="data/policiez.rda")
 }
 \keyword{datasets}
-

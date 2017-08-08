@@ -39,4 +39,3 @@ setcolorder(
 save(claimvaluationz, file="data/claimvaluationz.rda")
 }
 \keyword{datasets}
-
