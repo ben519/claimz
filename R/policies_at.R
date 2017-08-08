@@ -17,8 +17,8 @@ policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, p
   if(length(setdiff(c("ClaimID", "PolicyID"), colnames(claims))) > 0)
     stop("claims is missing the required columns {ClaimID, PolicyID}")
 
-  if(length(setdiff(c("ClaimValuationID", "ClaimID", "ValuationDate"), colnames(claimvaluations))) > 0)
-    stop("claimvaluations is missing the required columns {ClaimValuationID, ClaimID, ValuationDate}")
+  if(length(setdiff(c("ClaimID", "ValuationDate"), colnames(claimvaluations))) > 0)
+    stop("claimvaluations is missing the required columns {ClaimID, ValuationDate}")
 
   if(is.null(valuationDate) + is.null(policyAge) != 1)
     stop("Exactly one of {valuationDate, policyAge} must be given")
@@ -32,7 +32,7 @@ policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, p
   #--------------------------------------------------
   # Prep the claimvaluations dataset
 
-  cv <- claimvaluations[, list(ClaimValuationID, ClaimID, ValuationDate)]
+  cv <- claimvaluations[, list(ClaimID, ValuationDate)]
   cv[claims, PolicyID := PolicyID, on="ClaimID"]
   cv[policies, EffectiveDate := EffectiveDate, on="PolicyID"]
 
@@ -45,13 +45,13 @@ policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, p
   # policyIncurreds
 
   # Get claimset
-  claimset <- claims_at(cv, valuationDate=valuationDate, policyAge=policyAge, maxValuationDate=NULL, dropNAs=FALSE)
+  claimset <- claims_at(cv, valuationDate=valuationDate, policyAge=policyAge, maxValuationDate=NULL, dropImmatureValuations=FALSE)
 
   # Insert PolicyID
   claimset[claims, PolicyID := PolicyID, on="ClaimID"]
 
   # Insert Incurred
-  claimset[claimvaluations, Incurred := Incurred, on="ClaimValuationID"]
+  claimset[claimvaluations, Incurred := Incurred, on=c("ClaimID", "ValuationDate")]
 
   # Calculate total incurred per policy
   policyIncurreds <- claimset[, list(ValuationDate=ValuationDate[1], Incurred=sum(Incurred)), keyby=PolicyID]
@@ -84,9 +84,3 @@ policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, p
 
   return(pols[])
 }
-
-# ## EXAMPLES
-# policies_at(policies, claims, claimvaluations, valuationDate=as.Date("2015-1-1"))
-# policies_at(policies, claims, claimvaluations, valuationDate=as.Date("2015-1-1"))
-# policies_at(policies, claims, claimvaluations, valuationDate=as.Date("2015-1-1"))
-# policies_at(policies, claims, claimvaluations, valuationDate=as.Date("2015-1-1"))

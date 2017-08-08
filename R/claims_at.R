@@ -24,7 +24,7 @@
 #' @param claimAge return all claims as of this age, as measured in months since DOL
 #' @param policyAge return all claims valued at the time their policy is this age, as measured in months since Effective Date
 #' @param maxValuationDate don't return claims valued after this date
-#' @param dropNAs should claims be included in the result if their first valuation date is before the specified ValuationDate?
+#' @param dropImmatureValuations should claims be excluded in the result if their first valuation date is before maxValuationDate?
 #'
 #' @import data.table
 #' @import lubridate
@@ -48,13 +48,14 @@
 #' # View claims as they were valued when each policy was age = 12 months
 #' claims_at(claimvaluationz, policyAge = 12)
 
-claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policyAge=NULL, maxValuationDate=NULL, dropNAs=FALSE){
+claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, policyAge = NULL, maxValuationDate = NULL,
+                      dropImmatureValuations = TRUE){
   # Returns a set of unique claims, each mapped to a single row in claimvaluations
-  # The resulting data.table has columns {ClaimValuationID, ClaimID, ValuationDate}
+  # The resulting data.table has columns {ClaimID, ValuationDate}
   #
   # If valuationDate is given, each claim in the result set corresponds to the row of claimvaluations (for the same ClaimID)
   #   closest to but before valuationDate. If a claim did not exist as of valuationDate it will either be excluded from the
-  #   result set or returned with NA values depnding on whether dropNAs is TRUE or FALSE
+  #   result set or returned with NA values depnding on whether dropImmatureValuations is TRUE or FALSE
   #
   # If claimAge is given, claimAge months will be added to the DOL for each claim to generate the reference ValuationDate for
   #   for each claim and then the same procedure as above will occur. Note that this can result in some claims with invalid
@@ -65,8 +66,8 @@ claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policy
   #--------------------------------------------------
   # Chek inputs
 
-  if(length(setdiff(c("ClaimValuationID", "ClaimID", "ValuationDate"), colnames(claimvaluations))) > 0)
-    stop("claimvaluations is missing the required columns {ClaimValuationID, ClaimID, ValuationDate}")
+  if(length(setdiff(c("ClaimID", "ValuationDate"), colnames(claimvaluations))) > 0)
+    stop("claimvaluations is missing the required columns {ClaimID, ValuationDate}")
 
   if(is.null(valuationDate) + is.null(claimAge) + is.null(policyAge) != 2)
     stop("Exactly one of {valuationDate, claimAge, policyAge} must be given")
@@ -100,27 +101,20 @@ claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policy
   }
 
   # Execute rolling join to get the nearest claim valuation prior to each (ClaimID, ValuationDate) pair
-  cv <- claimvaluations[, list(ClaimValuationID, ClaimID, DesiredValDate=ValuationDate, CHValuationDate=ValuationDate)]
+  cv <- claimvaluations[, list(ClaimID, DesiredValDate=ValuationDate, CHValuationDate=ValuationDate)]
   result <- cv[claims, roll=TRUE, on=c("ClaimID", "DesiredValDate")]
 
   # If maxValuationDate is given, invalidate rows where DesiredValDate > maxValuationDate
-  if(!is.null(maxValuationDate)) result[DesiredValDate > maxValuationDate, `:=`(ClaimValuationID=NA, CHValuationDate=NA)]
-
-  # If dropNAs is TRUE, remove claims with ClaimValuationID as NA
-  # E.g. User wants claims @ age 24, but claim occured today and maxValuationDate is specifed as today
-  if(dropNAs) result <- result[!is.na(ClaimValuationID)]
+  if(!is.null(maxValuationDate)){
+    if(dropImmatureValuations == TRUE){
+      result <- result[DesiredValDate <= maxValuationDate]
+    } else{
+      result[DesiredValDate > maxValuationDate, `:=`(CHValuationDate=NA)]
+    }
+  }
 
   # Fix column names
   setnames(result, "DesiredValDate", "ValuationDate")
 
   return(result[])
 }
-
-# ## EXAMPLES
-# claims_at(claimvaluations, valuationDate=as.Date("2016-2-23"))
-# claims_at(claimvaluations, valuationDate=as.Date("2015-10-15"))
-# claims_at(claimvaluations, valuationDate=as.Date("2015-1-1"))
-# claims_at(claimvaluations, valuationDate=as.Date("2015-1-1"), dropNAs=TRUE)
-# claims_at(claimvaluations, claimAge = 9)
-# claims_at(claimvaluations, claimAge = 24)
-# claims_at(claimvaluations, claimAge = 24, maxValuationDate=as.Date("2017-1-1"))

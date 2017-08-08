@@ -41,17 +41,17 @@ claimz
 3:       3        2    2014-06-01     2015-06-01 2015-05-30
 
 claimvaluationz
-   ClaimValuationID ClaimID PolicyID EffectiveDate ExpirationDate        DOL ValuationDate Incurred
-1:                1       1        1    2014-01-01     2015-01-01 2014-03-15    2015-01-01      100
-2:                2       2        1    2014-01-01     2015-01-01 2014-04-01    2015-01-01      150
-3:                3       1        1    2014-01-01     2015-01-01 2014-03-15    2016-01-01      125
-4:                4       2        1    2014-01-01     2015-01-01 2014-04-01    2016-01-01      230
-5:                5       3        2    2014-06-01     2015-06-01 2015-05-30    2016-01-01       75
+   ValuationDate ClaimID PolicyID EffectiveDate ExpirationDate        DOL Incurred
+1:    2015-01-01       1        1    2014-01-01     2015-01-01 2014-03-15      100
+2:    2015-01-01       2        1    2014-01-01     2015-01-01 2014-04-01      150
+3:    2016-01-01       1        1    2014-01-01     2015-01-01 2014-03-15      125
+4:    2016-01-01       2        1    2014-01-01     2015-01-01 2014-04-01      230
+5:    2016-01-01       3        2    2014-06-01     2015-06-01 2015-05-30       75
 ```
 
 #### Validate the data structure and relationships
 ```r
-check_datasets(policiez, claimz, claimvaluationz)  # No warnings 
+is_valid_datasets(policiez, claimz, claimvaluationz)  # No warnings 
 check_datasets(policiez, head(claimz, 2), claimvaluationz)  # 1 warning: "1 unique ClaimIDs in claimvaluations not in claims"
 ```
 

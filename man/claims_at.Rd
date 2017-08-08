@@ -5,7 +5,8 @@
 \title{Claims At}
 \usage{
 claims_at(claimvaluations, valuationDate = NULL, claimAge = NULL,
-  policyAge = NULL, maxValuationDate = NULL, dropNAs = FALSE)
+  policyAge = NULL, maxValuationDate = NULL,
+  dropImmatureValuations = TRUE)
 }
 \arguments{
 \item{claimvaluations}{data.table object with columns {"ValuationDate", "ClaimID"}. Depending on the exact call to
@@ -19,7 +20,7 @@ claims_at(...), other columns may be required.}
 
 \item{maxValuationDate}{don't return claims valued after this date}
 
-\item{dropNAs}{should claims be included in the result if their first valuation date is before the specified ValuationDate?}
+\item{dropImmatureValuations}{should claims be excluded in the result if their first valuation date is before maxValuationDate?}
 }
 \description{
 Given a data.table of claimvaluations (i.e. with columns {"ValuationDate", "ClaimID", ...}), return claim-level subsets of the

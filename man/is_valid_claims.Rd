@@ -22,6 +22,6 @@ library(data.table)
 claimz
 
 # Validate
-check_claims(claimz)
-check_claims(claimz[, c("PolicyID", "EffectiveDate")])
+is_valid_claims(claimz)
+is_valid_claims(claimz[, c("PolicyID", "EffectiveDate")])
 }

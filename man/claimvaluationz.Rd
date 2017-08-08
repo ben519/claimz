@@ -6,13 +6,12 @@
 \title{Claim Valuations sample dataset}
 \format{A data.table with 2 rows and 3 variables:
 \describe{
-  \item{ClaimValuationID}{Unique identifier}
+  \item{ValuationDate}{Valuation Date}
   \item{ClaimID}{Associated Claim ID}
   \item{PolicyID}{Associated Policy ID}
   \item{EffectiveDate}{Effective date of the policy}
   \item{ExpirationDate}{Expiration date of the policy}
   \item{DOL}{Date of Loss of the claim}
-  \item{ValuationDate}{Valuation Date}
   \item{Incurred}{Incurred as of ValuationDate}
 }}
 \usage{
@@ -25,15 +24,14 @@ A dataset with sample claim valuations
 library(data.table)
 
 claimvaluationz <- data.table(
-  ClaimValuationID = c(1,2,3,4,5),
-  ClaimID = c(1,2,1,2,3),
   ValuationDate = as.Date(c("2015-1-1", "2015-1-1", "2016-1-1", "2016-1-1", "2016-1-1")),
+  ClaimID = c(1,2,1,2,3),
   Incurred = c(100, 150, 125, 230, 75)
 )
 claimvaluationz <- claimz[claimvaluationz, on="ClaimID"]
 setcolorder(
   claimvaluationz,
-  c("ClaimValuationID", "ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DOL", "ValuationDate", "Incurred")
+  c("ValuationDate", "ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DOL", "Incurred")
 )
 
 save(claimvaluationz, file="data/claimvaluationz.rda")

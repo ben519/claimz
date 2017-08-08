@@ -18,8 +18,8 @@
 #' claimz
 #'
 #' # Validate
-#' check_claims(claimz)
-#' check_claims(claimz[, c("PolicyID", "EffectiveDate")])
+#' is_valid_claims(claimz)
+#' is_valid_claims(claimz[, c("PolicyID", "EffectiveDate")])
 
 is_valid_claims <- function(claims){
   # Check the claims dataset for expected properties
@@ -44,7 +44,7 @@ is_valid_claims <- function(claims){
   }
 
   #--------------------------------------------------
-  # Return TRUE
+  # Dataset is valid
 
   return(TRUE)
 }
