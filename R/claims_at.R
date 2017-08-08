@@ -2,23 +2,51 @@
 #' Claims At
 #'
 #' @description
-#' Get claims evaluated at a specific date or age
+#' Given a data.table of claimvaluations (i.e. with columns {"ValuationDate", "ClaimID", ...}), return claim-level subsets of the
+#' data.
 #'
 #' @details
-#' Get claims evaluated at a specific date or age
+#' One may return
+#' \describe{
+#'   \item{claims valued as of a specific date}{E.g. "claims valued as of 2016-12-31"}
+#'   \item{claims valued as of a specific claim age}{E.g. "claims valued as of age = 9 months"}
+#'   \item{claims valued as of a specific policy age}{E.g. "claims at the instant their policy is of age = 12 months"}
+#' }
+#' Here, "claim age" refers to the number of months since the date of loss (DOL) while "policy age" refers to the number of months
+#' since the effective date.  Additionally, the parameter \code{maxValuationDate} may be provided to prevent results which have
+#' future valuation dates.  For example, if claimvaluations has monthly valuations from Jan 2010 thru Dec 2016, specifying
+#' \code{maxValuationDate = as.Date("2016-12-31")} and calling claims_at(claimvaluationz, claimAge = 2) will discard all claims
+#' which occured in Novemeber and December of 2016.
 #'
-#' @param claimvaluations
-#' @param valuationDate
-#' @param claimAge
-#' @param policyAge
-#' @param maxValuationDate
-#' @param dropNAs
+#' @param claimvaluations data.table object with columns {"ValuationDate", "ClaimID"}. Depending on the exact call to
+#' claims_at(...), other columns may be required.
+#' @param valuationDate return all claims valued as of this date
+#' @param claimAge return all claims as of this age, as measured in months since DOL
+#' @param policyAge return all claims valued at the time their policy is this age, as measured in months since Effective Date
+#' @param maxValuationDate don't return claims valued after this date
+#' @param dropNAs should claims be included in the result if their first valuation date is before the specified ValuationDate?
 #'
-#' @export
 #' @import data.table
+#' @import lubridate
 #'
 #' @examples
 #' library(data.table)
+#' library(lubridate)
+#'
+#' # Sample claim valuations
+#' claimvaluationz
+#'
+#' # View claims as they were valued on 2015-06-30
+#' claims_at(claimvaluationz, valuationDate = as.Date("2015-06-30"))
+#'
+#' # View each claim at age = 12 months
+#' claims_at(claimvaluationz, claimAge = 12)
+#'
+#' # View each claim at age = 12 months, assuming the data is valued as of 2016-03-01
+#' claims_at(claimvaluationz, claimAge = 12, maxValuationDate = as.Date("2016-03-01"))
+#'
+#' # View claims as they were valued when each policy was age = 12 months
+#' claims_at(claimvaluationz, policyAge = 12)
 
 claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policyAge=NULL, maxValuationDate=NULL, dropNAs=FALSE){
   # Returns a set of unique claims, each mapped to a single row in claimvaluations
@@ -67,7 +95,7 @@ claims_at <- function(claimvaluations, valuationDate=NULL, claimAge=NULL, policy
     claims <- unique(claimvaluations[, list(ClaimID, DOL)])
     claims[, DesiredValDate := DOL %m+% months(claimAge)]
   } else if(!is.null(policyAge)){
-    claims <- unique(claimvaluations[, list(ClaimID, EffectiveDate)])
+    claims <- unique(claimvaluations[, list(ClaimID, EffectiveDate, DOL)])
     claims[, DesiredValDate := DOL %m+% months(policyAge)]
   }
 
