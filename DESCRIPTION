@@ -12,3 +12,13 @@ RoxygenNote: 6.0.1
 Imports:
   lubridate,
   data.table(>= 1.9.7)
+Collate: 
+    'claims_at.R'
+    'data.R'
+    'helpers.R'
+    'is_valid_claims.R'
+    'is_valid_claimvaluations.R'
+    'is_valid_datasets.R'
+    'is_valid_policies.R'
+    'make_triangles.R'
+    'policies_at.R'
