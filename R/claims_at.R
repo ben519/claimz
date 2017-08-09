@@ -97,8 +97,8 @@ claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, po
     claims <- unique(claimvaluations[, list(ClaimID, DOL)])
     claims[, DesiredValDate := DOL %m+% months(claimAge)]
   } else if(!is.null(policyAge)){
-    claims <- unique(claimvaluations[, list(ClaimID, EffectiveDate, DOL)])
-    claims[, DesiredValDate := DOL %m+% months(policyAge)]
+    claims <- unique(claimvaluations[, list(ClaimID, EffectiveDate)])
+    claims[, DesiredValDate := EffectiveDate %m+% months(policyAge)]
   }
 
   # Execute rolling join to get the nearest claim valuation prior to each (ClaimID, ValuationDate) pair
