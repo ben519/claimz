@@ -114,8 +114,12 @@ claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, po
     }
   }
 
-  # Fix column names
-  setnames(result, "DesiredValDate", "ValuationDate")
+  # Pull in the oether claimvaluations fields
+  result <- claimvaluations[result, on=c("ClaimID", "ValuationDate"="CHValuationDate")]
+
+  # Fix column names and order
+  setnames(result, c("DesiredValDate", "ValuationDate"), c("ValuationDate", "CHValuationDate"))
+  setcolorder(result, unique(c("ClaimID", "ValuationDate", "CHValuationDate", colnames(result))))
 
   return(result[])
 }
