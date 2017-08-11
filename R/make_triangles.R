@@ -111,7 +111,7 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
       return(result)
     }
 
-    # Insert starting rows for date ocurred, and date reported
+    # Insert starting rows for date occurred, and date reported
     if(!is.null(colsFinancial)){
       claimvaluations.subset <- rbind(
         claimvaluations.subset[, eval(parse(
@@ -149,7 +149,7 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
 
     # Aggregate results
     # expr <- "ActiveClaims=sum(PNum == i.PNum, na.rm=TRUE), NewClaims.cmltv=sum(!is.na(PNum)), "
-    expr <- "Ocurred.cmltv = sum(Occured), Reported.cmltv = sum(Reported)"
+    expr <- "Occurred.cmltv = sum(Occured), Reported.cmltv = sum(Reported)"
     if(length(colsFinancial) > 0)
       expr <- paste(expr, ",", paste0(colsFinancial, "=sum(", colsFinancial, ", na.rm=TRUE)", collapse=", "))
     expr <- paste("list(", expr, ")")
@@ -166,7 +166,7 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
     result <- cbind(result, nonCmltv)
 
     # Set the column order of result
-    guaranteedCols <- c("ValuationDate", "Ocurred.cmltv", "Ocurred", "Reported.cmltv", "Reported")
+    guaranteedCols <- c("ValuationDate", "Occurred.cmltv", "Occurred", "Reported.cmltv", "Reported")
     setcolorder(result, c(guaranteedCols, sort(setdiff(colnames(result), guaranteedCols))))
 
     return(result)
