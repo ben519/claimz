@@ -9,7 +9,7 @@ is_valid_datasets(policies, claims, claimvaluations)
 \arguments{
 \item{policies}{data.table object with columns {"PolicyID"}}
 
-\item{claims}{data.table object with columns {"ClaimID", "PolicyID", "DOL"}}
+\item{claims}{data.table object with columns {"ClaimID", "PolicyID", "DateOfLoss"}}
 
 \item{claimvaluations}{data.table object with columns {"ValuationDate", "ClaimID"}}
 }

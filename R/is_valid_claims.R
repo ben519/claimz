@@ -7,7 +7,7 @@
 #' @details
 #' Checks claims dataset for valid columns, values, and other properties.  Returns TRUE if valid, FALSE otherwise.
 #'
-#' @param claims data.table object with columns {"ClaimID", "PolicyID", "DOL"}
+#' @param claims data.table object with columns {"ClaimID", "PolicyID", "DateOfLoss"}
 #'
 #' @export
 #' @import data.table
@@ -28,7 +28,7 @@ is_valid_claims <- function(claims){
   #--------------------------------------------------
   # Check for required fields
 
-  fields.claims <- c("ClaimID", "PolicyID", "DOL")
+  fields.claims <- c("ClaimID", "PolicyID", "DateOfLoss")
   missingfields.claims <- setdiff(fields.claims, colnames(claims))
   if(length(missingfields.claims > 0)){
     warning(paste0("These fields missing from claims:{", paste(missingfields.claims, collapse=", "), "}"))

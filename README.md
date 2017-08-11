@@ -35,24 +35,24 @@ policiez
 2:        2    2014-06-01     2015-06-01
 
 claimz
-   ClaimID PolicyID EffectiveDate ExpirationDate        DOL
-1:       1        1    2014-01-01     2015-01-01 2014-03-15
-2:       2        1    2014-01-01     2015-01-01 2014-04-01
-3:       3        2    2014-06-01     2015-06-01 2015-05-30
+   ClaimID PolicyID EffectiveDate ExpirationDate DateOfLoss ReportDate
+1:       1        1    2014-01-01     2015-01-01 2014-03-15 2014-03-15
+2:       2        1    2014-01-01     2015-01-01 2014-04-01 2015-07-11
+3:       3        2    2014-06-01     2015-06-01 2015-05-30 2015-06-10
 
 claimvaluationz
-   ValuationDate ClaimID PolicyID EffectiveDate ExpirationDate        DOL Incurred
-1:    2015-01-01       1        1    2014-01-01     2015-01-01 2014-03-15      100
-2:    2015-01-01       2        1    2014-01-01     2015-01-01 2014-04-01      150
-3:    2016-01-01       1        1    2014-01-01     2015-01-01 2014-03-15      125
-4:    2016-01-01       2        1    2014-01-01     2015-01-01 2014-04-01      230
-5:    2016-01-01       3        2    2014-06-01     2015-06-01 2015-05-30       75
+   ValuationDate ClaimID PolicyID EffectiveDate ExpirationDate DateOfLoss ReportDate Incurred Paid
+1:    2015-01-01       1        1    2014-01-01     2015-01-01 2014-03-15 2014-03-15      100   50
+2:    2015-01-01       2        1    2014-01-01     2015-01-01 2014-04-01 2015-07-11      150  100
+3:    2016-01-01       1        1    2014-01-01     2015-01-01 2014-03-15 2014-03-15      125  125
+4:    2016-01-01       2        1    2014-01-01     2015-01-01 2014-04-01 2015-07-11      230  230
+5:    2016-01-01       3        2    2014-06-01     2015-06-01 2015-05-30 2015-06-10       75   75
 ```
 
 #### Validate the data structure and relationships
 ```r
 is_valid_datasets(policiez, claimz, claimvaluationz)  # No warnings 
-check_datasets(policiez, head(claimz, 2), claimvaluationz)  # 1 warning: "1 unique ClaimIDs in claimvaluations not in claims"
+is_valid_datasets(policiez, head(claimz, 2), claimvaluationz)  # 1 warning: "1 unique ClaimIDs in claimvaluations not in claims"
 ```
 
 #### Claim Snapshots
@@ -71,7 +71,7 @@ Now take a look at claim 3.  It has DOL = 2015-05-30, and one valuation record o
 We can also query claims as of a particular **age**.  For example we can get all claims as of age = 10 months.
 ```r
 claims_at(claimvaluationz, claimAge = 10)
-   ClaimID ValuationDate CHValuationDate        DOL
+   ClaimID ValuationDate CHValuationDate DateOfLoss
 1:       1    2015-01-15      2015-01-01 2014-03-15
 2:       2    2015-02-01      2015-01-01 2014-04-01
 3:       3    2016-03-30      2016-01-01 2015-05-30
@@ -81,7 +81,7 @@ Here, **age** is measured in months since the DOL of the claim. For example, Cla
 Sometimes this can be problematic.  For example, consider ClaimID = 3.  It is 10 months old as of 2016-03-30, but perhaps our data is only valid up through 2016-02-29. In this case, resulting row for (ClaimID = 3, ValuationDate = 2016-03-30) is invalid because it is immature. We can prevent this from happening by using the parameters `maxValuationDate = as.Date("2016-02-29")` and `dropImmatureValuations = TRUE` (which is TRUE by default).
 ```r
 claims_at(claimvaluationz, claimAge = 10, maxValuationDate = as.Date("2016-02-29"), dropImmatureValuations = TRUE)
-   ClaimID ValuationDate CHValuationDate        DOL
+   ClaimID ValuationDate CHValuationDate DateOfLoss
 1:       1    2015-01-15      2015-01-01 2014-03-15
 2:       2    2015-02-01      2015-01-01 2014-04-01
 ```

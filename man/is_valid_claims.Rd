@@ -7,7 +7,7 @@
 is_valid_claims(claims)
 }
 \arguments{
-\item{claims}{data.table object with columns {"ClaimID", "PolicyID", "DOL"}}
+\item{claims}{data.table object with columns {"ClaimID", "PolicyID", "DateOfLoss"}}
 }
 \description{
 Validate a claims dataset

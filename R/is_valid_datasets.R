@@ -8,7 +8,7 @@
 #' Checks datasets for valid columns, values, and relational properties.  Returns TRUE if valid, FALSE otherwise.
 #'
 #' @param policies data.table object with columns {"PolicyID"}
-#' @param claims data.table object with columns {"ClaimID", "PolicyID", "DOL"}
+#' @param claims data.table object with columns {"ClaimID", "PolicyID", "DateOfLoss"}
 #' @param claimvaluations data.table object with columns {"ValuationDate", "ClaimID"}
 #'
 #' @export
