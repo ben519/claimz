@@ -32,7 +32,7 @@
 #'   \item{PolicyID}{Associated Policy ID}
 #'   \item{EffectiveDate}{Effective date of the policy}
 #'   \item{ExpirationDate}{Expiration date of the policy}
-#'   \item{DOL}{Date of Loss}
+#'   \item{DateOfLoss}{Date of Loss}
 #' }
 #'
 #' @details
@@ -41,10 +41,11 @@
 #' claimz <- data.table(
 #'   ClaimID = c(1,2,3),
 #'   PolicyID = c(1,1,2),
-#'   DOL = as.Date(c("2014-3-15", "2014-4-1", "2015-5-30"))
+#'   DateOfLoss = as.Date(c("2014-3-15", "2014-4-1", "2015-5-30")),
+#'   ReportDate = as.Date(c("2014-3-15", "2015-7-11", "2015-6-10"))
 #' )
 #' claimz <- policiez[claimz, on="PolicyID"]
-#' setcolorder(claimz, c("ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DOL"))
+#' setcolorder(claimz, c("ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DateOfLoss", "ReportDate"))
 #'
 #' save(claimz, file="data/claimz.rda")
 "claimz"
@@ -61,7 +62,7 @@
 #'   \item{PolicyID}{Associated Policy ID}
 #'   \item{EffectiveDate}{Effective date of the policy}
 #'   \item{ExpirationDate}{Expiration date of the policy}
-#'   \item{DOL}{Date of Loss of the claim}
+#'   \item{DateOfLoss}{Date of Loss of the claim}
 #'   \item{Incurred}{Incurred as of ValuationDate}
 #' }
 #'
@@ -71,12 +72,13 @@
 #' claimvaluationz <- data.table(
 #'   ValuationDate = as.Date(c("2015-1-1", "2015-1-1", "2016-1-1", "2016-1-1", "2016-1-1")),
 #'   ClaimID = c(1,2,1,2,3),
+#'   Paid = c(50, 100, 125, 230, 75),
 #'   Incurred = c(100, 150, 125, 230, 75)
 #' )
 #' claimvaluationz <- claimz[claimvaluationz, on="ClaimID"]
 #' setcolorder(
 #'   claimvaluationz,
-#'   c("ValuationDate", "ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DOL", "Incurred")
+#'   c("ValuationDate", "ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DateOfLoss", "ReportDate", "Incurred", "Paid")
 #' )
 #'
 #' save(claimvaluationz, file="data/claimvaluationz.rda")

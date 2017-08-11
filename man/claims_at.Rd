@@ -14,7 +14,7 @@ claims_at(...), other columns may be required.}
 
 \item{valuationDate}{return all claims valued as of this date}
 
-\item{claimAge}{return all claims as of this age, as measured in months since DOL}
+\item{claimAge}{return all claims as of this age, as measured in months since DateOfLoss}
 
 \item{policyAge}{return all claims valued at the time their policy is this age, as measured in months since Effective Date}
 
@@ -33,7 +33,7 @@ One may return
   \item{claims valued as of a specific claim age}{E.g. "claims valued as of age = 9 months"}
   \item{claims valued as of a specific policy age}{E.g. "claims at the instant their policy is of age = 12 months"}
 }
-Here, "claim age" refers to the number of months since the date of loss (DOL) while "policy age" refers to the number of months
+Here, "claim age" refers to the number of months since the date of loss (DateOfLoss) while "policy age" refers to the number of months
 since the effective date.  Additionally, the parameter \code{maxValuationDate} may be provided to prevent results which have
 future valuation dates.  For example, if claimvaluations has monthly valuations from Jan 2010 thru Dec 2016, specifying
 \code{maxValuationDate = as.Date("2016-12-31")} and calling claims_at(claimvaluationz, claimAge = 2) will discard all claims

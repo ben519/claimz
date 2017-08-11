@@ -10,7 +10,7 @@
   \item{PolicyID}{Associated Policy ID}
   \item{EffectiveDate}{Effective date of the policy}
   \item{ExpirationDate}{Expiration date of the policy}
-  \item{DOL}{Date of Loss}
+  \item{DateOfLoss}{Date of Loss}
 }}
 \usage{
 claimz
@@ -24,10 +24,11 @@ library(data.table)
 claimz <- data.table(
   ClaimID = c(1,2,3),
   PolicyID = c(1,1,2),
-  DOL = as.Date(c("2014-3-15", "2014-4-1", "2015-5-30"))
+  DateOfLoss = as.Date(c("2014-3-15", "2014-4-1", "2015-5-30")),
+  ReportDate = as.Date(c("2014-3-15", "2015-7-11", "2015-6-10"))
 )
 claimz <- policiez[claimz, on="PolicyID"]
-setcolorder(claimz, c("ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DOL"))
+setcolorder(claimz, c("ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DateOfLoss", "ReportDate"))
 
 save(claimz, file="data/claimz.rda")
 }

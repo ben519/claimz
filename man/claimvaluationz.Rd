@@ -11,7 +11,7 @@
   \item{PolicyID}{Associated Policy ID}
   \item{EffectiveDate}{Effective date of the policy}
   \item{ExpirationDate}{Expiration date of the policy}
-  \item{DOL}{Date of Loss of the claim}
+  \item{DateOfLoss}{Date of Loss of the claim}
   \item{Incurred}{Incurred as of ValuationDate}
 }}
 \usage{
@@ -26,12 +26,13 @@ library(data.table)
 claimvaluationz <- data.table(
   ValuationDate = as.Date(c("2015-1-1", "2015-1-1", "2016-1-1", "2016-1-1", "2016-1-1")),
   ClaimID = c(1,2,1,2,3),
+  Paid = c(50, 100, 125, 230, 75),
   Incurred = c(100, 150, 125, 230, 75)
 )
 claimvaluationz <- claimz[claimvaluationz, on="ClaimID"]
 setcolorder(
   claimvaluationz,
-  c("ValuationDate", "ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DOL", "Incurred")
+  c("ValuationDate", "ClaimID", "PolicyID", "EffectiveDate", "ExpirationDate", "DateOfLoss", "ReportDate", "Incurred", "Paid")
 )
 
 save(claimvaluationz, file="data/claimvaluationz.rda")

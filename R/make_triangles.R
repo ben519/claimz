@@ -30,7 +30,7 @@
 #' @examples
 #' library(data.table)
 #'
-#' make_triangles(claimvaluations, originLength = 3, rowDev = 3, colDev = 3)  # guess the financial columns
+#' make_triangles(claimvaluationz, originLength = 3, rowDev = 3, colDev = 3)  # guess the financial columns
 
 make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=NULL, originLength=12, rowDev=12, colDev=12,
                            lastValuationDate=NULL, fromMinLeftOrigin=TRUE, initialAge=originLength, colsFinancial="auto",
@@ -44,7 +44,7 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
   # colsFinancial will look for numeric columns whose name ends in ".cmltv"
 
   if(is.null(minLeftOrigin)){
-    minLeftOrigin <- as.Date(paste0(min(year(claimvaluations$ValuationDate)), "-1-1"))
+    minLeftOrigin <- as.Date(paste0(min(year(claimvaluations$DateOfLoss)), "-1-1"))
     if(verbose) print(paste("minLeftOrigin automatically set to", minLeftOrigin))
   }
 
@@ -52,12 +52,6 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
     lastValuationDate <- max(claimvaluations$ValuationDate)
     if(verbose) print(paste("lastValuationDate automatically set to", lastValuationDate))
   }
-
-  #======================================================================================================
-  # triangle_skeleton()
-
-
-  #======================================================================================================
 
   # Get colsFinancial
   if(colsFinancial == "auto"){
@@ -70,27 +64,24 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
   params <- triangle_skeleton(minLeftOrigin=minLeftOrigin, originLength=originLength, rowDev=rowDev, colDev=colDev,
                               lastValuationDate=lastValuationDate, fromMinLeftOrigin=fromMinLeftOrigin, initialAge=initialAge)
 
-  # Build a vector of "FirstValuationDate"s for each claim corresponding to the claimvaluations dataset, but don't actually
-  # insert this in the table
-  firstvaldts <- claimvaluations[, list(.I, FirstValuationDate = min(ValuationDate)), by=ClaimID]$FirstValuationDate
-
   # Helper method to subset claims into a row and then partition claim-valuations in that row and aggregate them
   rowPartitionSums <- function(valDts, leftO, rightO){
     # For testing:
     # leftO <- params$LeftOrigin[1]; rightO <- params$RightOrigin[1]
     # valDts <- params[LeftOrigin==leftO & RightOrigin==rightO]$ValuationDate
 
-    # Get the group of claims in the row of the triangle defined by leftO and rightO
     valDts <<- valDts
     leftO <<- leftO
     rightO <<- rightO
-    claimvaluations.subset <- claimvaluations[between(firstvaldts, leftO, rightO)]
+
+    # Get the group of claims in the row of the triangle defined by leftO and rightO
+    claimvaluations.subset <- claimvaluations[between(DateOfLoss, leftO, rightO)]
 
     # If there are no claims in this row, fill in the data as necessary
     if(nrow(claimvaluations.subset) == 0){
 
       # Build a table with the primary columns
-      primary <- data.table(ValuationDate=valDts, ActiveClaims=0L, NewClaims=0L, NewClaims.cmltv=0L)
+      primary <- data.table(ValuationDate=valDts, Occurred.cmltv=0L, Occurred=0L, Reported.cmltv=0L, Reported=0L)
 
       if(length(colsFinancial) > 0){
         extra.cmltv <- claimvaluations.subset[, colsFinancial, with=FALSE]
@@ -120,11 +111,32 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
       return(result)
     }
 
+    # Insert starting rows for date ocurred, and date reported
+    if(!is.null(colsFinancial)){
+      claimvaluations.subset <- rbind(
+        claimvaluations.subset[, eval(parse(
+          text = paste("list(ValuationDate = DateOfLoss[1], Occured = 1L, Reported = 0L,", paste(colsFinancial, "=0", collapse=","),")")
+        )), keyby=ClaimID],
+        claimvaluations.subset[, eval(parse(
+          text = paste("list(ValuationDate = ReportDate[1], Occured = 1L, Reported = 1L,", paste(colsFinancial, "=0", collapse=","),")")
+        )), keyby=ClaimID],
+        claimvaluations.subset[, eval(parse(
+          text = paste("list(ValuationDate = ReportDate[1], Occured = 1L, Reported = 1L,", paste(colsFinancial, collapse=","),")")
+        )), keyby=ClaimID]
+      )
+    } else{
+      claimvaluations.subset <- rbind(
+        claimvaluations.subset[, list(ValuationDate = DateOfLoss[1], Paid = 0, Occured = 1L, Reported = 0L), keyby=ClaimID],
+        claimvaluations.subset[, list(ValuationDate = ReportDate[1], Paid = 0, Occured = 1L, Reported = 1L), keyby=ClaimID],
+        claimvaluations.subset[, list(ClaimID, ValuationDate, Paid, Occured = 1L, Reported = 1L)]
+      )
+    }
+
     # Build a table to partition the data by ClaimID and ValuationDate
-    partitioner <- CJ(ClaimID=unique(claimvaluations.subset$ClaimID), ValuationDate=valDts)
+    partitioner <- CJ(ClaimID = unique(claimvaluations.subset$ClaimID), ValuationDate = valDts)
 
     # Add the Partition Numbers for each claim (used in calculating "active" claims)
-    partitioner[, PNum:=seq_along(ValuationDate), by=ClaimID]
+    partitioner[, PNum := seq_along(ValuationDate), by=ClaimID]
 
     # For each row in claimvaluations.subset get the nearest partition number via a backward rolling join from partitioner
     # to claimvaluations.subset
@@ -136,14 +148,16 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
     forwardjoin <- backwardjoin[partitioner, roll=TRUE]
 
     # Aggregate results
-    expr <- "ActiveClaims=sum(PNum == i.PNum, na.rm=TRUE), NewClaims.cmltv=sum(!is.na(PNum))"
+    # expr <- "ActiveClaims=sum(PNum == i.PNum, na.rm=TRUE), NewClaims.cmltv=sum(!is.na(PNum)), "
+    expr <- "Ocurred.cmltv = sum(Occured), Reported.cmltv = sum(Reported)"
     if(length(colsFinancial) > 0)
       expr <- paste(expr, ",", paste0(colsFinancial, "=sum(", colsFinancial, ", na.rm=TRUE)", collapse=", "))
     expr <- paste("list(", expr, ")")
     result <- forwardjoin[, eval(parse(text=expr)), by=ValuationDate]
 
     # Build the non-cumulative columns
-    nonCmltv <- result[, !c("ValuationDate", "ActiveClaims"), with=FALSE]
+    # nonCmltv <- result[, !c("ValuationDate", "ActiveClaims"), with=FALSE]
+    nonCmltv <- result[, !c("ValuationDate"), with=FALSE]
     nonCmltv <- nonCmltv[, lapply(.SD, function(x) c(x[1], tail(x,-1) - head(x,-1)))]
     setnames(nonCmltv, gsub("\\.cmltv","", colnames(nonCmltv))) # remove .cmltv from the column names
     if(length(colsFinancial) > 0) setnames(nonCmltv, colsFinancial, paste0(colsFinancial, ".chg")) # append .chg to financial cols
@@ -152,7 +166,7 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
     result <- cbind(result, nonCmltv)
 
     # Set the column order of result
-    guaranteedCols <- c("ValuationDate", "ActiveClaims", "NewClaims", "NewClaims.cmltv")
+    guaranteedCols <- c("ValuationDate", "Ocurred.cmltv", "Ocurred", "Reported.cmltv", "Reported")
     setcolorder(result, c(guaranteedCols, sort(setdiff(colnames(result), guaranteedCols))))
 
     return(result)

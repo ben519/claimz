@@ -41,5 +41,5 @@ Returns a list of data.table objects
 \examples{
 library(data.table)
 
-make_triangles(claimvaluations, originLength = 3, rowDev = 3, colDev = 3)  # guess the financial columns
+make_triangles(claimvaluationz, originLength = 3, rowDev = 3, colDev = 3)  # guess the financial columns
 }
