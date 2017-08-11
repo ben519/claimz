@@ -65,7 +65,11 @@ simulate_losses <- function(numLosses = 500, startDate = as.Date("2010-01-01"), 
   newids[, NewClaimID := .I]
   payments[newids, ClaimID := i.NewClaimID, on=c("ClaimID"="OldClaimID")]
   payments <- payments[order(ClaimID, ValuationDate)]
+
+  # Apply cutoff
   payments <- payments[ValuationDate <= cutoffDate]
+  payments[CloseDate > cutoffDate, CloseDate := NA]
+
   setcolorder(payments, c("ClaimID", "DateOfLoss", "ReportDate", "CloseDate", "ValuationDate", "Paid"))
 
   return(payments[])
