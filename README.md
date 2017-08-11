@@ -97,5 +97,80 @@ claims_at(claimvaluationz, policyAge = 18)
 ```
 Looking at ClaimID = 2, its policy began on 2014-01-01, so the policy was 18 months old as of 2015-07-01. The result shows that it can be mapped back to the 2015-01-01 valuation point in **claimvaluationz** to infer the values of the claim when the policy was 18 months old.
 
+#### Loss Triangles
+The claimz package also makes it easy to generate loss triangles for analyzing changes in loss amounts over time. To start, we'll make use of the `simulate_losses()` method to generate a random set of claimvaluations.
+
+```r
+set.seed(0)
+claimvalz <- simulate_losses(numLosses = 6, startDate = as.Date("2010-01-1"), endDate = as.Date("2012-12-31"))
+
+claimvalz
+    ClaimID DateOfLoss ReportDate  CloseDate ValuationDate     Paid
+ 1:       1 2010-11-14 2010-11-14 2010-11-14    2010-11-14  3840.15
+ 2:       2 2011-05-31 2011-05-31       <NA>    2011-09-15  3942.93
+ 3:       2 2011-05-31 2011-05-31       <NA>    2012-03-03  4993.45
+ 4:       2 2011-05-31 2011-05-31       <NA>    2012-05-09  5515.82
+ 5:       2 2011-05-31 2011-05-31       <NA>    2012-11-04  7510.48
+ 6:       3 2011-08-13 2011-08-13 2012-11-17    2011-11-05    95.52
+ 7:       3 2011-08-13 2011-08-13 2012-11-17    2011-12-16  4086.58
+ 8:       3 2011-08-13 2011-08-13 2012-11-17    2012-01-25  6526.67
+ 9:       3 2011-08-13 2011-08-13 2012-11-17    2012-02-12  6691.28
+10:       3 2011-08-13 2011-08-13 2012-11-17    2012-02-26  6806.08
+11:       3 2011-08-13 2011-08-13 2012-11-17    2012-04-22  6839.26
+12:       3 2011-08-13 2011-08-13 2012-11-17    2012-05-28  6897.72
+13:       3 2011-08-13 2011-08-13 2012-11-17    2012-07-04  9447.92
+14:       3 2011-08-13 2011-08-13 2012-11-17    2012-08-31  9970.55
+15:       3 2011-08-13 2011-08-13 2012-11-17    2012-09-03 10490.37
+16:       3 2011-08-13 2011-08-13 2012-11-17    2012-10-08 10985.27
+17:       3 2011-08-13 2011-08-13 2012-11-17    2012-11-17 11415.97
+18:       4 2012-04-25 2012-04-25 2012-04-25    2012-04-25 11011.00
+19:       5 2012-04-27 2012-04-27       <NA>    2012-07-24   844.10
+20:       5 2012-04-27 2012-04-27       <NA>    2012-08-27  1289.29
+21:       6 2012-10-10 2012-10-10       <NA>    2012-10-13  1143.53
+```
+
+The function `make_triangles()` has a host of parameters for customizing loss triangles.  For example, if we wanted to generate annual triangles, we could simply run `make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 12)`.  The result is a list of six triangles.
+
+```r
+make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 12)
+$Occurred.cmltv
+                         Age
+Origin                    12 24
+  2010-01-01 - 2010-12-31  1  1
+  2011-01-01 - 2011-12-31  2 NA
+
+$Occurred
+                         Age
+Origin                    12 24
+  2010-01-01 - 2010-12-31  1  0
+  2011-01-01 - 2011-12-31  2 NA
+
+$Reported.cmltv
+                         Age
+Origin                    12 24
+  2010-01-01 - 2010-12-31  1  1
+  2011-01-01 - 2011-12-31  2 NA
+
+$Reported
+                         Age
+Origin                    12 24
+  2010-01-01 - 2010-12-31  1  0
+  2011-01-01 - 2011-12-31  2 NA
+
+$Paid
+                         Age
+Origin                          12      24
+  2010-01-01 - 2010-12-31  3840.15 3840.15
+  2011-01-01 - 2011-12-31 18926.45      NA
+
+$Paid.chg
+                         Age
+Origin                          12 24
+  2010-01-01 - 2010-12-31  3840.15  0
+  2011-01-01 - 2011-12-31 18926.45 NA
+```
+
+Each row represents a distinct set of claims.  For example, the first row, *2010-01-01 - 2010-12-31*, represents claims that occurred between 2010-01-01 and 2010-12-31.  Looking at the *Reported* triangle, we see that 1 claim which occurred in the period was reported within 12 months of 2010-01-01.  Similarly, row 2 shows that 2 claim2 which occurred between 2011-01-01 and 2011-12-31 were each reported within 12 months of 2011-01-01.
+
 #### Contact
 If you'd like to contact me regarding bugs, questions, or general consulting, feel free to drop me a line - bgorman519@gmail.com
