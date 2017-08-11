@@ -124,6 +124,7 @@ The function `make_triangles()` has a host of parameters for customizing loss tr
 
 ```r
 make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 12)
+
 $Occurred.cmltv
                          Age
 Origin                    12 24 36
