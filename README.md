@@ -101,32 +101,23 @@ Looking at ClaimID = 2, its policy began on 2014-01-01, so the policy was 18 mon
 The claimz package also makes it easy to generate loss triangles for analyzing changes in loss amounts over time. To start, we'll make use of the `simulate_losses()` method to generate a random set of claimvaluations.
 
 ```r
-set.seed(0)
-claimvalz <- simulate_losses(numLosses = 6, startDate = as.Date("2010-01-1"), endDate = as.Date("2012-12-31"))
+set.seed(4)
+claimvalz <- simulate_losses(numLosses = 10, startDate = as.Date("2010-01-1"), endDate = as.Date("2012-12-31"))
 
 claimvalz
-    ClaimID DateOfLoss ReportDate  CloseDate ValuationDate     Paid
- 1:       1 2010-11-14 2010-11-14 2010-11-14    2010-11-14  3840.15
- 2:       2 2011-05-31 2011-05-31       <NA>    2011-09-15  3942.93
- 3:       2 2011-05-31 2011-05-31       <NA>    2012-03-03  4993.45
- 4:       2 2011-05-31 2011-05-31       <NA>    2012-05-09  5515.82
- 5:       2 2011-05-31 2011-05-31       <NA>    2012-11-04  7510.48
- 6:       3 2011-08-13 2011-08-13 2012-11-17    2011-11-05    95.52
- 7:       3 2011-08-13 2011-08-13 2012-11-17    2011-12-16  4086.58
- 8:       3 2011-08-13 2011-08-13 2012-11-17    2012-01-25  6526.67
- 9:       3 2011-08-13 2011-08-13 2012-11-17    2012-02-12  6691.28
-10:       3 2011-08-13 2011-08-13 2012-11-17    2012-02-26  6806.08
-11:       3 2011-08-13 2011-08-13 2012-11-17    2012-04-22  6839.26
-12:       3 2011-08-13 2011-08-13 2012-11-17    2012-05-28  6897.72
-13:       3 2011-08-13 2011-08-13 2012-11-17    2012-07-04  9447.92
-14:       3 2011-08-13 2011-08-13 2012-11-17    2012-08-31  9970.55
-15:       3 2011-08-13 2011-08-13 2012-11-17    2012-09-03 10490.37
-16:       3 2011-08-13 2011-08-13 2012-11-17    2012-10-08 10985.27
-17:       3 2011-08-13 2011-08-13 2012-11-17    2012-11-17 11415.97
-18:       4 2012-04-25 2012-04-25 2012-04-25    2012-04-25 11011.00
-19:       5 2012-04-27 2012-04-27       <NA>    2012-07-24   844.10
-20:       5 2012-04-27 2012-04-27       <NA>    2012-08-27  1289.29
-21:       6 2012-10-10 2012-10-10       <NA>    2012-10-13  1143.53
+| ClaimID | DateOfLoss | ReportDate | CloseDate  | ValuationDate |   Paid   |
+|:-------:|:----------:|:----------:|:----------:|:-------------:|:--------:|
+|    1    | 2010-01-11 | 2010-01-11 |     NA     |  2010-01-18   |  857.71  |
+|    1    | 2010-01-11 | 2010-01-11 |     NA     |  2010-07-09   |  967.22  |
+|    1    | 2010-01-11 | 2010-01-11 |     NA     |  2010-08-07   | 1566.26  |
+|    1    | 2010-01-11 | 2010-01-11 |     NA     |  2010-10-22   | 4276.51  |
+|    1    | 2010-01-11 | 2010-01-11 |     NA     |  2011-05-07   | 5097.13  |
+|   ...   |    ...     |    ...     |    ...     |      ...      |   ...    |
+|    7    | 2012-03-05 | 2012-03-05 |     NA     |  2012-12-31   |  783.25  |
+|    8    | 2012-09-21 | 2012-09-21 |     NA     |  2012-10-13   | 5291.33  |
+|    8    | 2012-09-21 | 2012-09-21 |     NA     |  2012-10-21   | 6083.48  |
+|    8    | 2012-09-21 | 2012-09-21 |     NA     |  2012-12-04   | 6114.92  |
+|    9    | 2012-11-07 | 2012-11-07 | 2012-11-07 |  2012-11-07   | 29385.51 |
 ```
 
 The function `make_triangles()` has a host of parameters for customizing loss triangles.  For example, if we wanted to generate annual triangles, we could simply run `make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 12)`.  The result is a list of six triangles.
@@ -135,42 +126,59 @@ The function `make_triangles()` has a host of parameters for customizing loss tr
 make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 12)
 $Occurred.cmltv
                          Age
-Origin                    12 24
-  2010-01-01 - 2010-12-31  1  1
-  2011-01-01 - 2011-12-31  2 NA
+Origin                    12 24 36
+  2010-01-01 - 2010-12-31  5  5  5
+  2011-01-01 - 2011-12-31  1  1 NA
+  2012-01-01 - 2012-12-31  3 NA NA
 
 $Occurred
                          Age
-Origin                    12 24
-  2010-01-01 - 2010-12-31  1  0
-  2011-01-01 - 2011-12-31  2 NA
+Origin                    12 24 36
+  2010-01-01 - 2010-12-31  5  0  0
+  2011-01-01 - 2011-12-31  1  0 NA
+  2012-01-01 - 2012-12-31  3 NA NA
 
 $Reported.cmltv
                          Age
-Origin                    12 24
-  2010-01-01 - 2010-12-31  1  1
-  2011-01-01 - 2011-12-31  2 NA
+Origin                    12 24 36
+  2010-01-01 - 2010-12-31  4  5  5
+  2011-01-01 - 2011-12-31  1  1 NA
+  2012-01-01 - 2012-12-31  3 NA NA
 
 $Reported
                          Age
-Origin                    12 24
-  2010-01-01 - 2010-12-31  1  0
-  2011-01-01 - 2011-12-31  2 NA
+Origin                    12 24 36
+  2010-01-01 - 2010-12-31  4  1  0
+  2011-01-01 - 2011-12-31  1  0 NA
+  2012-01-01 - 2012-12-31  3 NA NA
 
 $Paid
                          Age
-Origin                          12      24
-  2010-01-01 - 2010-12-31  3840.15 3840.15
-  2011-01-01 - 2011-12-31 18926.45      NA
+Origin                          12       24       36
+  2010-01-01 - 2010-12-31 41751.49 49080.76 49080.76
+  2011-01-01 - 2011-12-31  6189.03  6189.03       NA
+  2012-01-01 - 2012-12-31 36283.68       NA       NA
 
 $Paid.chg
                          Age
-Origin                          12 24
-  2010-01-01 - 2010-12-31  3840.15  0
-  2011-01-01 - 2011-12-31 18926.45 NA
+Origin                          12      24 36
+  2010-01-01 - 2010-12-31 41751.49 7329.27  0
+  2011-01-01 - 2011-12-31  6189.03    0.00 NA
+  2012-01-01 - 2012-12-31 36283.68      NA NA
 ```
 
-Each row represents a distinct set of claims.  For example, the first row, *2010-01-01 - 2010-12-31*, represents claims that occurred between 2010-01-01 and 2010-12-31.  Looking at the *Reported* triangle, we see that 1 claim which occurred in the period was reported within 12 months of 2010-01-01.  Similarly, row 2 shows that 2 claim2 which occurred between 2011-01-01 and 2011-12-31 were each reported within 12 months of 2011-01-01.
+Each row represents a distinct set of claims.  For example, the first row, *2010-01-01 - 2010-12-31*, represents claims that occurred between 2010-01-01 and 2010-12-31.  Looking at the *Reported* triangle, we see that four claims which occurred in the period were reported within 12 months of 2010-01-01 and 1 other claim the occurred in the period was reported between 12 and 24 months.  Similarly, row two shows that one claim which occurred between 2011-01-01 and 2011-12-31 was reported within 12 months of 2011-01-01.
+
+We could also look at quarterly or monthly triangles
+```r
+# quarterly
+make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 3, rowDev = 3, colDev = 3)
+
+# monthly
+make_triangles(claimvalz, minLeftOrigin = as.Date("2010-01-01"), originLength = 1, rowDev = 1, colDev = 1)
+```
+
+There are **many** additional options within `make_triangles()` - too many to explain here so be sure to read the function documentation to learn all its capabilities.
 
 #### Contact
 If you'd like to contact me regarding bugs, questions, or general consulting, feel free to drop me a line - bgorman519@gmail.com
