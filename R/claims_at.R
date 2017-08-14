@@ -102,11 +102,9 @@ claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, po
     claims[, DesiredValDate := valuationDate]
   } else if(!is.null(claimAge)){
     claims <- unique(claimvaluations[, list(ClaimID, DateOfLoss)])
-    # claims[, DesiredValDate := DateOfLoss %m+% months(claimAge)]
     claims[, DesiredValDate := lubridate::`%m+%`(DateOfLoss, months(claimAge))]
   } else if(!is.null(policyAge)){
     claims <- unique(claimvaluations[, list(ClaimID, EffectiveDate)])
-    # claims[, DesiredValDate := EffectiveDate %m+% months(policyAge)]
     claims[, DesiredValDate := lubridate::`%m+%`(EffectiveDate, months(policyAge))]
   }
 
