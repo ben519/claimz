@@ -43,6 +43,14 @@ make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=N
   # generate triangles (in addition to the guaranteed triangles {ActiveClaims, NewClaims, NewClaims.cmltv}). If "auto",
   # colsFinancial will look for numeric columns whose name ends in ".cmltv"
 
+  #--------------------------------------------------
+  # Clean claimvaluations
+
+  claimvaluations <- clean_claimvaluations(claimvaluations = claimvaluations, colmap = colmap_claimvaluations)
+
+  #--------------------------------------------------
+  # Check inputs
+
   if(is.null(minLeftOrigin)){
     minLeftOrigin <- as.Date(paste0(min(year(claimvaluations$DateOfLoss)), "-1-1"))
     if(verbose) print(paste("minLeftOrigin automatically set to", minLeftOrigin))

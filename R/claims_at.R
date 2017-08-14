@@ -50,7 +50,7 @@
 #' claims_at(claimvaluationz, policyAge = 12)
 
 claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, policyAge = NULL, maxValuationDate = NULL,
-                      dropImmatureValuations = TRUE){
+                      dropImmatureValuations = TRUE, colmap_claimvaluations = NULL){
   # Returns a set of unique claims, each mapped to a single row in claimvaluations
   # The resulting data.table has columns {ClaimID, ValuationDate}
   #
@@ -63,6 +63,11 @@ claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, po
   #   results (consider a brand new claim). Provide value for maxValuationDate to safeguard for this.
   #
   # If policyAge is given, same as above except policyAge months is added to the EffectiveDate of the policy for each claim
+
+  #--------------------------------------------------
+  # Clean claimvaluations
+
+  claimvaluations <- clean_claimvaluations(claimvaluations = claimvaluations, colmap = colmap_claimvaluations)
 
   #--------------------------------------------------
   # Chek inputs

@@ -14,6 +14,8 @@ Imports:
   data.table(>= 1.9.7)
 Collate: 
     'claims_at.R'
+    'clean_claims.R'
+    'clean_claimvaluations.R'
     'data.R'
     'helpers.R'
     'is_valid_claims.R'

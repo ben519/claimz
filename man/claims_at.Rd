@@ -6,7 +6,7 @@
 \usage{
 claims_at(claimvaluations, valuationDate = NULL, claimAge = NULL,
   policyAge = NULL, maxValuationDate = NULL,
-  dropImmatureValuations = TRUE)
+  dropImmatureValuations = TRUE, colmap_claimvaluations = NULL)
 }
 \arguments{
 \item{claimvaluations}{data.table object with columns {"ValuationDate", "ClaimID"}. Depending on the exact call to
