@@ -60,6 +60,11 @@ simulate_losses <- function(numLosses = 500, startDate = as.Date("2010-01-01"), 
   # Insert claim fields into payments
   payments[claims, `:=`(DateOfLoss = i.DOL, ReportDate = i.ReportDate, CloseDate = i.CloseDate), on="ClaimID"]
 
+  # Insert Incurred, Reserves
+  payments[, Incurred := pmax(Paid + .01, round(rnorm(n = .N, mean = Paid + 500, sd = 100), 2)), by=ClaimID]
+  payments[ValuationDate == CloseDate, Incurred := Paid]
+  payments[, Reserves := Incurred - Paid]
+
   # Cleanup
   newids <- payments[, list(1), keyby=list(DateOfLoss, OldClaimID = ClaimID)]
   newids[, NewClaimID := .I]
@@ -70,7 +75,7 @@ simulate_losses <- function(numLosses = 500, startDate = as.Date("2010-01-01"), 
   payments <- payments[ValuationDate <= cutoffDate]
   payments[CloseDate > cutoffDate, CloseDate := NA]
 
-  setcolorder(payments, c("ClaimID", "DateOfLoss", "ReportDate", "CloseDate", "ValuationDate", "Paid"))
+  setcolorder(payments, c("ClaimID", "DateOfLoss", "ReportDate", "CloseDate", "ValuationDate", "Paid", "Reserves", "Incurred"))
 
   return(payments[])
 }
