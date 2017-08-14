@@ -7,21 +7,26 @@ triangle_skeleton <- function(minLeftOrigin, fromMinLeftOrigin, originLength, ro
 
   # Input corrections
   minLeftOrigin <- rollback(minLeftOrigin) + 1  # Force minLeftOrigin to be a first-of-month
-  lastValuationDate <- rollback((rollback(lastValuationDate) + 1) %m+% months(1))  # Force the lastValuationDate to be an end-of-month
+  # lastValuationDate <- rollback((rollback(lastValuationDate) + 1) %m+% months(1))  # Force the lastValuationDate to be an end-of-month
+  lastValuationDate <- rollback(lubridate::`%m+%`(rollback(lastValuationDate) + 1, months(1)))  # Force the lastValuationDate to be an end-of-month
 
   # Generate all leftOrigins
   if(fromMinLeftOrigin){
-    leftOrigins <- seq(minLeftOrigin, (lastValuationDate + 1) %m-% months(initialAge), by=paste(rowDev, "months"))
+    # leftOrigins <- seq(minLeftOrigin, (lastValuationDate + 1) %m-% months(initialAge), by=paste(rowDev, "months"))
+    leftOrigins <- seq(minLeftOrigin, lubridate::`%m-%`(lastValuationDate + 1, months(initialAge)), by=paste(rowDev, "months"))
   } else{
-    leftOrigins <- rev(seq((lastValuationDate + 1) %m-% months(initialAge), minLeftOrigin, by=paste(-rowDev, "months")))
+    # leftOrigins <- rev(seq((lastValuationDate + 1) %m-% months(initialAge), minLeftOrigin, by=paste(-rowDev, "months")))
+    leftOrigins <- rev(seq(lubridate::`%m-%`(lastValuationDate + 1, months(initialAge)), minLeftOrigin, by=paste(-rowDev, "months")))
   }
 
   # Generate all rightOrigins
-  rightOrigins <- leftOrigins %m+% months(originLength) - 1
+  # rightOrigins <- leftOrigins %m+% months(originLength) - 1
+  rightOrigins <- lubridate::`%m+%`(leftOrigins, months(originLength)) - 1
 
   # Helper method to get all valuation dates given (rightOrigin, originLength, initialAge, lastValuationDate, colDev)
   getValDts <- function(rightOrigin, originLength, initialAge, lastValuationDate, colDev){
-    seq((as.Date(rightOrigin) + 1) %m-% months(originLength-initialAge), lastValuationDate + 1, by=paste(colDev,"months")) - 1
+    # seq((as.Date(rightOrigin) + 1) %m-% months(originLength-initialAge), lastValuationDate + 1, by=paste(colDev,"months")) - 1
+    seq(lubridate::`%m-%`(as.Date(rightOrigin) + 1, months(originLength-initialAge)), lastValuationDate + 1, by=paste(colDev,"months")) - 1
   }
 
   skeleton <- data.table(LeftOrigin=leftOrigins, RightOrigin=rightOrigins, lastValuationDate=lastValuationDate, colDev=colDev, originLength=originLength, initialAge=initialAge)

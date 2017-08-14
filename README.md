@@ -24,7 +24,6 @@ Demonstration
 ```r
 library(claimz)
 library(data.table)
-library(lubridate)
 ```
 
 #### Toy datasets included in the claimz package

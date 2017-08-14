@@ -81,7 +81,8 @@ policies_at <- function(policies, claims, claimvaluations, valuationDate=NULL, p
   if(!is.null(valuationDate)){
     pols <- policies[, list(PolicyID, EffectiveDate, ValuationDate=valuationDate)]
   } else if(!is.null(policyAge)){
-    pols <- policies[, list(PolicyID, EffectiveDate, ValuationDate=EffectiveDate %m+% months(policyAge))]
+    # pols <- policies[, list(PolicyID, EffectiveDate, ValuationDate=EffectiveDate %m+% months(policyAge))]
+    pols <- policies[, list(PolicyID, EffectiveDate, ValuationDate=lubridate::`%m+%`(EffectiveDate, months(policyAge)))]
   }
 
   #--------------------------------------------------
