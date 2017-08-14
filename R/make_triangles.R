@@ -19,6 +19,7 @@
 #' @param fromMinLeftOrigin See ?triangle_skeleton
 #' @param initialAge See ?triangle_skeleton
 #' @param colsFinancial What financial columns in \code{claimvaluations} should generate triangles? Default="auto" guesses
+#' @param colmap_claimvaluations named vector of column mapping
 #' @param verbose Should progress details be displayed?
 #'
 #' @export
@@ -34,7 +35,7 @@
 
 make_triangles <- function(claimvaluations, format="triangular", minLeftOrigin=NULL, originLength=12, rowDev=12, colDev=12,
                            lastValuationDate=NULL, fromMinLeftOrigin=TRUE, initialAge=originLength, colsFinancial="auto",
-                           verbose=FALSE){
+                           colmap_claimvaluations = NULL, verbose=FALSE){
   # Method to build triangles from a cumulative transactions dataset (result of calling cumulate_transactions())
   # format can be one of {"tall", "triangular"}
   # If "tall", a single data.table is returned

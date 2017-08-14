@@ -7,7 +7,7 @@
 make_triangles(claimvaluations, format = "triangular", minLeftOrigin = NULL,
   originLength = 12, rowDev = 12, colDev = 12, lastValuationDate = NULL,
   fromMinLeftOrigin = TRUE, initialAge = originLength,
-  colsFinancial = "auto", verbose = FALSE)
+  colsFinancial = "auto", colmap_claimvaluations = NULL, verbose = FALSE)
 }
 \arguments{
 \item{claimvaluations}{A data.table of cumulative transaction valuations (result of calling cumulate_transactions())}
@@ -29,6 +29,8 @@ make_triangles(claimvaluations, format = "triangular", minLeftOrigin = NULL,
 \item{initialAge}{See ?triangle_skeleton}
 
 \item{colsFinancial}{What financial columns in \code{claimvaluations} should generate triangles? Default="auto" guesses}
+
+\item{colmap_claimvaluations}{named vector of column mapping}
 
 \item{verbose}{Should progress details be displayed?}
 }

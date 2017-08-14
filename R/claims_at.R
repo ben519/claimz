@@ -25,6 +25,7 @@
 #' @param policyAge return all claims valued at the time their policy is this age, as measured in months since Effective Date
 #' @param maxValuationDate don't return claims valued after this date
 #' @param dropImmatureValuations should claims be excluded in the result if their first valuation date is before maxValuationDate?
+#' @param colmap_claimvaluations named vector of column mapping
 #'
 #' @importFrom lubridate %m+%
 #' @import data.table

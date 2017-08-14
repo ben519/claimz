@@ -21,6 +21,8 @@ claims_at(...), other columns may be required.}
 \item{maxValuationDate}{don't return claims valued after this date}
 
 \item{dropImmatureValuations}{should claims be excluded in the result if their first valuation date is before maxValuationDate?}
+
+\item{colmap_claimvaluations}{named vector of column mapping}
 }
 \description{
 Given a data.table of claimvaluations (i.e. with columns {"ValuationDate", "ClaimID", ...}), return claim-level subsets of the
