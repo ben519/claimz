@@ -68,6 +68,7 @@ claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, po
   # Clean claimvaluations
 
   claimvaluations <- clean_claimvaluations(claimvaluations = claimvaluations, colmap = colmap_claimvaluations)
+  colmap <- attr(claimvaluations, "colmap")
 
   #--------------------------------------------------
   # Chek inputs
@@ -123,8 +124,14 @@ claims_at <- function(claimvaluations, valuationDate = NULL, claimAge = NULL, po
   result <- claimvaluations[result, on=c("ClaimID", "ValuationDate"="CHValuationDate")]
 
   # Fix column names and order
-  setnames(result, c("DesiredValDate", "ValuationDate"), c("ValuationDate", "CHValuationDate"))
-  setcolorder(result, unique(c("ClaimID", "ValuationDate", "CHValuationDate", colnames(result))))
+  setnames(result, c("DesiredValDate", "ValuationDate"), c("ValuationDate", "CH_ValuationDate"))
+  setcolorder(result, unique(c("ClaimID", "ValuationDate", "CH_ValuationDate", colnames(result))))
+
+  #--------------------------------------------------
+  # Rename columns to user-inputted column names
+
+  setnames(result, names(colmap), colmap)
+  setnames(result, "CH_ValuationDate", paste0("CH_", colmap[names(colmap) == "ValuationDate"]))
 
   return(result[])
 }
